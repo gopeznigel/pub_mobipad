@@ -1,0 +1,73 @@
+name: mobipad
+description: A notepad for mobile.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.1.3+14
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons:
+  shared_preferences:
+  intl:
+  flutter_screenutil:
+  font_awesome_flutter:
+  email_validator:
+  flutter_speed_dial:
+
+  cloud_firestore:
+  firebase_core:
+  firebase_auth:
+  google_sign_in:
+
+  flutter_native_admob: ^2.1.0+3
+  flutter_local_notifications:
+  webview_flutter:
+
+  flutter_redux:
+  redux:
+  redux_logging:
+  redux_epics:
+  rxdart:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: "^0.7.3"
+  lints: ^1.0.1
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/oh-notes_logo.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/oh-notes_logo.png
+    - assets/img/note_art.png
+    - assets/img/todo_art.png
+
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Bold.ttf
+        - asset: assets/fonts/OpenSans-BoldItalic.ttf
+        - asset: assets/fonts/OpenSans-ExtraBold.ttf
+        - asset: assets/fonts/OpenSans-ExtraBoldItalic.ttf
+        - asset: assets/fonts/OpenSans-Italic.ttf
+        - asset: assets/fonts/OpenSans-Light.ttf
+        - asset: assets/fonts/OpenSans-LightItalic.ttf
+        - asset: assets/fonts/OpenSans-Regular.ttf
+        - asset: assets/fonts/OpenSans-SemiBold.ttf
+        - asset: assets/fonts/OpenSans-SemiBoldItalic.ttf
+    - family:  OhNotes
+      fonts:
+       - asset: assets/fonts/OhNotes.ttf

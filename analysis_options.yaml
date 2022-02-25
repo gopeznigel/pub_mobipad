@@ -1,0 +1,18 @@
+# Run command [dart pub add --dev lints] of lints package is not found
+
+include: package:lints/recommended.yaml
+
+analyzer:
+  errors:
+    use_function_type_syntax_for_parameters: ignore
+    constant_identifier_names: ignore
+
+linter:
+  rules:
+    - directives_ordering
+    - avoid_print
+    - unnecessary_statements
+    - unnecessary_brace_in_string_interps
+    - non_constant_identifier_names
+    - empty_statements
+    - await_only_futures
