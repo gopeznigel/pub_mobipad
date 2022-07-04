@@ -1,17 +1,23 @@
-import '../../exception/action_exception.dart';
-import '../home/model.dart';
+import 'package:built_value/built_value.dart';
+import 'package:mobipad/exception/action_exception.dart';
+import 'package:mobipad/core/dtos.dart';
 
-class NoteState {
-  bool isLoading;
-  bool isEditing;
-  Note note;
-  ActionException exception;
+import 'dtos.dart';
 
-  NoteState({this.isLoading, this.isEditing, this.note, this.exception});
+part 'state.g.dart';
 
-  NoteState.initial()
-      : isLoading = false,
-        isEditing = false,
-        note = null,
-        exception = null;
+abstract class NoteState implements Built<NoteState, NoteStateBuilder> {
+  factory NoteState([void Function(NoteStateBuilder b) updates]) = _$NoteState;
+
+  factory NoteState.initial() => _$NoteState._(
+        noteMode: NoteModeEnum.note,
+        status: NoteStatusEnum.none,
+      );
+
+  NoteState._();
+
+  NoteModeEnum get noteMode;
+  NoteStatusEnum get status;
+  NoteDto? get note;
+  ActionException? get exception;
 }

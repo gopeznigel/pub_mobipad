@@ -15,18 +15,16 @@ final Reducer<ForgotPasswordState> forgotPasswordStateReducer =
 
 ForgotPasswordState _sendResetPasswordLinkReducer(
         ForgotPasswordState state, SendResetPasswordLink action) =>
-    state
-      ..isSending = true
-      ..exception = null;
+    state.rebuild((b) => b
+      ..isBusy = true
+      ..exception = null);
 
 ForgotPasswordState _sendResetPasswordLinkSucceededReducer(
         ForgotPasswordState state, SendResetPasswordLinkSucceeded action) =>
-    state
-      ..isSending = false
-      ..exception = null;
+    state.rebuild((b) => b..isBusy = false);
 
 ForgotPasswordState _sendResetPasswordLinkFailedReducer(
         ForgotPasswordState state, SendResetPasswordLinkFailed action) =>
-    state
-      ..isSending = false
-      ..exception = action.exception;
+    state.rebuild((b) => b
+      ..isBusy = false
+      ..exception = action.exception);

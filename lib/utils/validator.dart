@@ -2,18 +2,25 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 
 class Validator {
-  static String emailValidator(String value) =>
-      EmailValidator.validate(value) ? null : 'Invalid email address';
-
-  static String passwordValidator(String value) {
-    if (value.isEmpty) {
-      return 'Invalid password';
+  static String? emailValidator(String? value) {
+    if (value == null) {
+      return null;
     }
-    return null;
+
+    return EmailValidator.validate(value) ? null : 'Invalid email address';
   }
 
-  static bool formValidated(GlobalKey formKey) {
-    final FormState form = formKey.currentState;
+  static String? passwordValidator(String? value) {
+    if (value == null) {
+      return null;
+    }
+
+    return value.isEmpty ? 'Invalid password' : null;
+  }
+
+  static bool formValidated(GlobalKey<FormState> formKey) {
+    final FormState form = formKey.currentState!;
+
     if (form.validate()) {
       form.save();
       return true;

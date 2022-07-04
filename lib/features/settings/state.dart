@@ -1,17 +1,26 @@
-import '../../exception/action_exception.dart';
+import 'package:built_value/built_value.dart';
+import 'package:mobipad/exception/action_exception.dart';
 
-class SettingsState {
-  ActionException exception;
-  int fontSize;
-  String sorting;
-  String dateTimeDisplay;
+part 'state.g.dart';
 
-  SettingsState(
-      {this.fontSize, this.sorting, this.dateTimeDisplay, this.exception});
+abstract class SettingsState
+    implements Built<SettingsState, SettingsStateBuilder> {
+  factory SettingsState([void Function(SettingsStateBuilder b) updates]) =
+      _$SettingsState;
 
-  SettingsState.initial()
-      : fontSize = 50,
-        dateTimeDisplay = 'Simple',
-        sorting = 'modified',
-        exception = null;
+  factory SettingsState.initial() => _$SettingsState._(
+        isBusy: false,
+        selectedSorting: 'modified',
+        selectedDateTimeDisplay: 'Simple',
+        selectedFontSize: 50,
+      );
+
+  SettingsState._();
+
+  bool get isBusy;
+  String get selectedSorting;
+  String get selectedDateTimeDisplay;
+  int get selectedFontSize;
+
+  ActionException? get exception;
 }

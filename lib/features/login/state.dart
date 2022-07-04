@@ -1,25 +1,20 @@
+import 'package:built_value/built_value.dart';
 import 'package:mobipad/exception/action_exception.dart';
+import 'package:mobipad/features/login/dtos.dart';
 
-import 'model.dart';
+part 'state.g.dart';
 
-class LoginState {
-  bool isLoading;
-  bool googleSignIn;
-  OhNotesUser user;
-  ActionException exception;
-  bool newLogin;
+abstract class LoginState implements Built<LoginState, LoginStateBuilder> {
+  factory LoginState([void Function(LoginStateBuilder b) updates]) =
+      _$LoginState;
 
-  LoginState(
-      {this.isLoading,
-      this.googleSignIn,
-      this.user,
-      this.exception,
-      this.newLogin});
+  factory LoginState.initial() => _$LoginState._(
+        status: LoginStatusEnum.initial,
+      );
 
-  LoginState.initial()
-      : isLoading = false,
-        googleSignIn = false,
-        user = null,
-        newLogin = null,
-        exception = null;
+  LoginState._();
+
+  LoginStatusEnum get status;
+  UserDto? get user;
+  ActionException? get exception;
 }

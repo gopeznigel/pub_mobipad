@@ -1,205 +1,170 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobipad/features/forgot_password/ui/forgot_password_page.dart';
-import 'package:mobipad/features/login/ui/signup_page.dart';
-import 'package:mobipad/vars/colors.dart';
+import 'package:mobipad/state.dart';
+import 'package:mobipad/utils/validator.dart';
+import 'package:mobipad/styles/colors.dart';
+import 'package:mobipad/styles/text_styles.dart';
 import 'package:redux/redux.dart';
 
-import '../../../state.dart';
-import '../../../utils/validator.dart';
-import '../../login/actions.dart';
-import '../../login/ui/login_form_view.dart';
-import '../../login/ui/widgets/login_buttons.dart';
-import '../../login/view_model/view_model.dart';
+import '../actions.dart';
+import '../dtos.dart';
+import '../view_models/login_view_model.dart';
+import 'login_form_view.dart';
+import 'signup_page.dart';
+import 'widgets/login_buttons.dart';
 
 class LoginPage extends StatefulWidget {
-  static const String route = '/login';
+  static const String route = '/loginPage';
+
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  ///
-  /// Email Text contoller. Use to store password inputs.
-  ///
-  final _emailTextContoller = TextEditingController();
-
-  ///
-  /// Password Text controller. Use to store password inputs.
-  ///
-  final _passwordTextContoller = TextEditingController();
-
-  ///
-  /// Form key. Used for validating email and password inputs.
-  ///
+  final TextEditingController _emailTextContoller = TextEditingController();
+  final TextEditingController _passwordTextContoller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  ///
-  /// The store. This contains the state of the app.
-  ///
   Store<AppState> get store => StoreProvider.of(context);
 
   @override
   void dispose() {
     _emailTextContoller.dispose();
     _passwordTextContoller.dispose();
+
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => StoreConnector(
-        converter: (Store<AppState> store) =>
-            LoginPageViewModel(store.state.loginState),
-        builder: _buildPage,
-      );
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, LoginPageViewModel>(
+      converter: (store) => LoginPageViewModel(store.state.loginState),
+      builder: _build,
+    );
+  }
 
-  Widget _buildPage(BuildContext context, LoginPageViewModel viewModel) {
-    final error = viewModel.exception?.exception?.toString() ?? '';
-
-    ///
-    /// This is the form view. Container textInputField for email and password
-    ///
-    final _formView = LoginFormView(
+  Widget _build(BuildContext context, LoginPageViewModel viewModel) {
+    final formView = LoginFormView(
       formKey: _formKey,
       emailTextContoller: _emailTextContoller,
       passwordTextContoller: _passwordTextContoller,
-      loading: viewModel.isLoading,
+      loading: viewModel.status.isLoading,
     );
 
-    ///
-    /// This is the Login button. Dispatch the Login() action when pressed.
-    ///
-    final _loginButton = LoginButton(
-      loading: !viewModel.googleSignIn ? viewModel.isLoading : false,
+    final loginButton = LoginButton(
+      loading: viewModel.status.isLoading,
       onTap: () {
-        if (!viewModel.isLoading) {
+        if (!viewModel.status.isLoading) {
           var validated = Validator.formValidated(_formKey);
           if (validated) {
-            store.dispatch(
-                Login(_emailTextContoller.text, _passwordTextContoller.text));
+            store.dispatch(Login(
+                email: _emailTextContoller.text,
+                password: _passwordTextContoller.text));
           }
         }
       },
     );
 
-    ///
-    /// This is the create account label.
-    /// Opens the SignUp page when pressed.
-    ///
-    final _createAccount = GestureDetector(
+    final createAccount = GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, SignUpPage.route);
+        Navigator.pushNamed(context, SignupPage.route);
       },
-      child: Container(
+      child: SizedBox(
         height: 48.0,
         child: Center(
           child: Text(
             'Create an Account',
-            style: TextStyle(
-              decoration: TextDecoration.underline,
+            style: OhNotesTextStyles.appBarTitle.copyWith(
               color: Colors.white,
-              fontSize: 40.sp,
-              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline,
             ),
           ),
         ),
       ),
     );
 
-    ///
-    /// This is the forgot password label.
-    /// Opens the ForgotPassword page when pressed.
-    ///
-    final _forgotPassword = GestureDetector(
+    final forgotPassword = GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, ForgotPasswordPage.route);
       },
-      child: Container(
+      child: SizedBox(
         height: 48.0,
         child: Center(
           child: Text(
             'Forgot Password?',
-            style: TextStyle(
-              decoration: TextDecoration.underline,
+            style: OhNotesTextStyles.appBarTitle.copyWith(
               color: Colors.white,
-              fontSize: 40.sp,
-              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline,
             ),
           ),
         ),
       ),
     );
 
-    ///
-    /// This is the google button.
-    /// SignIn/Signup using google account
-    ///
-    final _googleButton = GoogleButton(
+    final googleButton = GoogleButton(
       onTap: () {
-        if (!viewModel.isLoading) {
+        if (!viewModel.status.isLoading) {
           store.dispatch(LoginUsingGoogle());
         }
       },
-      isLoading: viewModel.googleSignIn ? viewModel.isLoading : false,
+      isLoading: viewModel.status.isLoading,
     );
 
-    final _body = Center(
+    final body = Center(
       child: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.only(left: 100.w, right: 100.w),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 50,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            _formView,
-            SizedBox(height: 70.h),
-            _loginButton,
+            formView,
+            const SizedBox(height: 30),
+            loginButton,
             Visibility(
               visible: viewModel.exception != null,
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  error.contains('ERROR_NETWORK')
+                  viewModel.error.contains('ERROR_NETWORK')
                       ? "Can't connect to server. Check connection."
                       : 'Invalid Email or Password.',
-                  style: TextStyle(
-                    color: OhNotesColor.error_text,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 35.sp,
+                  style: OhNotesTextStyles.notePreviewBody.copyWith(
+                    color: OhNotesColor.errorText,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 150.h),
-            _createAccount,
-            SizedBox(height: 150.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50.w),
+            const SizedBox(height: 48.0),
+            createAccount,
+            const SizedBox(height: 48.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Divider(
                 color: Colors.white,
-                thickness: 2.h,
+                thickness: 2,
               ),
             ),
-            SizedBox(height: 40.h),
-            _googleButton,
-             SizedBox(height: 20.h),
-            _forgotPassword,
+            const SizedBox(height: 10),
+            googleButton,
+            const SizedBox(height: 20),
+            forgotPassword,
           ],
         ),
       ),
     );
 
-    ///
-    /// returns the Scaffold that contains the
-    /// login page ui
-    ///
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: _body,
+          child: body,
         ),
       ),
     );

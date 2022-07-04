@@ -1,37 +1,34 @@
+/// Run the command below to generate g.dart files
+/// '''flutter pub run build_runner watch'''
+
+import 'package:built_value/built_value.dart';
+import 'package:mobipad/features/forgot_password/state.dart';
+import 'package:mobipad/features/home/state.dart';
+import 'package:mobipad/features/login/state.dart';
+import 'package:mobipad/features/note/state.dart';
 import 'package:mobipad/features/reminder/state.dart';
 import 'package:mobipad/features/settings/state.dart';
 
-import 'features/forgot_password/state.dart';
-import 'features/home/state.dart';
-import 'features/login/state.dart';
-import 'features/note/state.dart';
-import 'features/todo/state.dart';
+part 'state.g.dart';
 
-class AppState {
-  LoginState loginState;
-  HomeState homeState;
-  NoteState noteState;
-  TodoState todoState;
-  SettingsState settingsState;
-  ForgotPasswordState forgotPasswordState;
-  ReminderState reminderState;
+abstract class AppState implements Built<AppState, AppStateBuilder> {
+  factory AppState([void Function(AppStateBuilder b) updates]) = _$AppState;
 
-  AppState({
-    this.loginState,
-    this.homeState,
-    this.noteState,
-    this.todoState,
-    this.settingsState,
-    this.forgotPasswordState,
-    this.reminderState,
-  });
+  factory AppState.initial() => _$AppState._(
+        loginState: LoginState.initial(),
+        homeState: HomeState.initial(),
+        noteState: NoteState.initial(),
+        reminderState: ReminderState.initial(),
+        settingsState: SettingsState.initial(),
+        forgotPasswordState: ForgotPasswordState.initial(),
+      );
 
-  AppState.initial()
-      : loginState = LoginState.initial(),
-        homeState = HomeState.initial(),
-        noteState = NoteState.initial(),
-        todoState = TodoState.initial(),
-        settingsState = SettingsState.initial(),
-        forgotPasswordState = ForgotPasswordState.initial(),
-        reminderState = ReminderState.initial();
+  AppState._();
+
+  LoginState get loginState;
+  HomeState get homeState;
+  NoteState get noteState;
+  ReminderState get reminderState;
+  SettingsState get settingsState;
+  ForgotPasswordState get forgotPasswordState;
 }

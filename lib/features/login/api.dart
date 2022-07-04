@@ -1,61 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mobipad/features/login/dtos.dart';
+import 'package:mobipad/features/login/serializers.dart' as user_serializer;
+import 'package:mobipad/services/auth_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../services/auth_api.dart';
-import '../../services/user_repository.dart';
-import 'model.dart';
-
 class LoginApi {
-  LoginApi(this._userRepository, this._api)
-      : assert(_userRepository != null && _api != null);
+  LoginApi(this._api);
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  final UserRepository _userRepository;
-  final Auth _api;
+  final AuthService _api;
 
-  Future<bool> hasUserId() async {
-    return await _userRepository.hasuserId();
+  UserDto? getUser() {
+    final user = _api.getCurrentUser();
+
+    if (user != null) {
+      return _firebaseUserToUserDto(user);
+    } else {
+      return null;
+    }
   }
 
-  Future<OhNotesUser> getUser() async {
-    var firebaseUser = await _api.getCurrentUser();
-    await _userRepository.persistuserId(firebaseUser.uid);
-    return OhNotesUser.fromJson(
-        firebaseUserToMap(firebaseUser), firebaseUser.uid);
+  Future<UserDto?> signIn(String email, String password) async {
+    var user = await _api.signIn(email, password);
+
+    if (user != null) {
+      return _firebaseUserToUserDto(user);
+    } else {
+      return null;
+    }
   }
 
-  Future<OhNotesUser> signIn(String email, String password) async {
-    var firebaseUser = await _api.signIn(email, password);
-    await _userRepository.persistuserId(firebaseUser.uid);
-    return OhNotesUser.fromJson(
-        firebaseUserToMap(firebaseUser), firebaseUser.uid);
-  }
-
-  Future<OhNotesUser> signUp(String email, String password) async {
-    var firebaseUser = await _api.signUp(email, password);
-    await _userRepository.persistuserId(firebaseUser.uid);
-
-    // Add user to database
-    await _api.addUser(firebaseUserToMap(firebaseUser), firebaseUser.uid);
-
-    return OhNotesUser.fromJson(
-        firebaseUserToMap(firebaseUser), firebaseUser.uid);
-  }
-
-  Future<void> signOut() async {
-    await _api.signOut();
-    await _userRepository.deleteUserId();
-  }
-
-  Map<String, dynamic> firebaseUserToMap(User user) {
-    return <String, dynamic>{
-      'userId': user.uid,
-      'email': user.email,
-    };
-  }
-
-  Future<OhNotesUser> signInUsingGoogle() async {
+  Future<UserDto?> signInUsingGoogle() async {
     try {
       var googleUser = await _googleSignIn.signIn();
 
@@ -65,20 +41,60 @@ class LoginApi {
         var credential = GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-        var firebaseUser = await _api.signInWithGoogle(credential);
+        var user = await _api.signInWithGoogle(credential);
 
-        await _userRepository.persistuserId(firebaseUser.uid);
+        if (user != null) {
+          var userDto = _firebaseUserToUserDto(user);
 
-        // Add user to database
-        await _api.addUser(firebaseUserToMap(firebaseUser), firebaseUser.uid);
+          // Add user to firebase
+          await _addUser(userDto);
 
-        return OhNotesUser.fromJson(
-            firebaseUserToMap(firebaseUser), firebaseUser.uid);
+          return userDto;
+        } else {
+          return null;
+        }
       }
     } catch (error) {
-      return null;
+      throw Exception(error.toString());
     }
 
-    return null;
+    throw Exception('Sign In failed.');
   }
+
+  Future<UserDto?> signUp(String email, String password) async {
+    var user = await _api.signUp(email, password);
+
+    if (user != null) {
+      var userDto = _firebaseUserToUserDto(user);
+
+      // Add user to firebase
+      await _addUser(userDto);
+
+      return userDto;
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await _api.signOut();
+      await _googleSignIn.signOut();
+    } catch (e) {
+      return;
+    }
+  }
+
+  UserDto _firebaseUserToUserDto(User user) {
+    return UserDto(
+      (b) => b
+        ..email = user.email
+        ..userId = user.uid,
+    );
+  }
+
+  Future<void> _addUser(UserDto user) async => await _api.addUser(
+      user_serializer.serializers.serializeWith(UserDto.serializer, user)
+          as Map<String, dynamic>,
+      user.userId);
 }

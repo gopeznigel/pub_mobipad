@@ -1,62 +1,144 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:mobipad/core/dtos.dart';
+import 'package:mobipad/exception/action_exception.dart';
 
-import '../../exception/action_exception.dart';
-import '../home/model.dart';
+import 'dtos.dart';
+
+@immutable
+class SaveNewNote {
+  final NoteDto newNote;
+
+  const SaveNewNote({required this.newNote});
+
+  @override
+  String toString() => 'SaveNewNote  { newNote: $newNote }';
+}
+
+@immutable
+class SaveNewNoteSuccessful {
+  final NoteDto note;
+
+  const SaveNewNoteSuccessful({required this.note});
+
+  @override
+  String toString() => 'SaveNewNoteSuccessful { note: $note }';
+}
+
+@immutable
+class SaveNewNoteFailed {
+  final ActionException exception;
+
+  const SaveNewNoteFailed({required this.exception});
+
+  @override
+  String toString() => 'SaveNewNoteFailed { exception: $exception }';
+}
+
+@immutable
+class SetNoteStatus {
+  const SetNoteStatus({required this.status});
+
+  final NoteStatusEnum status;
+
+  @override
+  String toString() => 'SetNoteStatus {status: $status}';
+}
 
 @immutable
 class SaveNote {
-  SaveNote(this.note) : assert(note != null);
+  final NoteDto note;
 
-  final Note note;
+  const SaveNote({required this.note});
 
   @override
-  String toString() => 'SaveNote {note: $note}';
+  String toString() => 'SaveNote { note: $note }';
 }
 
 @immutable
-class SaveNoteSucceeded {
-  SaveNoteSucceeded(this.note) : assert(note != null);
+class PinNote {
+  final bool pin;
+  final NoteDto note;
 
-  final Note note;
+  const PinNote({required this.pin, required this.note});
 
   @override
-  String toString() => 'SaveNoteSucceeded {note: $note}';
+  String toString() => 'PinNote { pin: $pin, note: $note }';
 }
 
 @immutable
-class SaveNoteFailed {
-  SaveNoteFailed(this.exception) : assert(exception != null);
+class ArchiveNote {
+  final NoteDto note;
 
+  const ArchiveNote({required this.note});
+
+  @override
+  String toString() => 'ArchiveNote { note: $note }';
+}
+
+@immutable
+class UnarchiveNote {
+  final NoteDto note;
+
+  const UnarchiveNote({required this.note});
+
+  @override
+  String toString() => 'UnarchiveNote { note: $note }';
+}
+
+@immutable
+class DeleteNote {
+  final NoteDto note;
+
+  const DeleteNote({required this.note});
+
+  @override
+  String toString() => 'DeleteNote { note: $note }';
+}
+
+@immutable
+class RestoreNote {
+  final NoteDto note;
+
+  const RestoreNote({required this.note});
+
+  @override
+  String toString() => 'RestoreNote { note: $note }';
+}
+
+@immutable
+class UpdatedNote {
+  final NoteDto note;
+
+  const UpdatedNote({required this.note});
+
+  @override
+  String toString() => 'UpdatedNote { note: $note }';
+}
+
+@immutable
+class PermanentDeleteNote {
+  final NoteDto note;
+
+  const PermanentDeleteNote({required this.note});
+
+  @override
+  String toString() => 'PermanentDeleteNote { note: $note }';
+}
+
+@immutable
+class PermanentDeleteNoteSuccessful {
+  @override
+  String toString() => 'PermanentDeleteNoteSuccessful';
+}
+
+@immutable
+class PermanentDeleteNoteFailed {
   final ActionException exception;
 
-  @override
-  String toString() => 'SaveNoteFailed {exception: $exception}';
-}
-
-@immutable
-class UpdateNote {
-  UpdateNote(this.note) : assert(note != null);
-
-  final Note note;
+  const PermanentDeleteNoteFailed({required this.exception});
 
   @override
-  String toString() => 'UpdateNote {note: $note}';
-}
-
-@immutable
-class UpdateNoteSucceeded {
-  @override
-  String toString() => 'UpdateNoteSucceeded';
-}
-
-@immutable
-class UpdateNoteFailed {
-  UpdateNoteFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'UpdateNoteFailed {exception: $exception}';
+  String toString() => 'PermanentDeleteNoteFailed { exception: $exception }';
 }
 
 @immutable
@@ -68,197 +150,92 @@ class EditNote {
 @immutable
 class CancelEditNote {
   @override
-  String toString() => 'CancelEditNote';
+  String toString() => 'EditNote';
 }
 
 @immutable
-class ResetNotePage {
+class UpdateTitle {
+  final String title;
+
+  const UpdateTitle({required this.title});
+
   @override
-  String toString() => 'ResetNotePage';
+  String toString() => 'UpdateTitle { title: $title }';
 }
 
 @immutable
-class OpenExistingNote {
-  OpenExistingNote(this.note) : assert(note != null);
+class UpdateNoteBody {
+  final String body;
 
-  final Note note;
+  const UpdateNoteBody({required this.body});
 
   @override
-  String toString() => 'OpenExistingNote {note: ${note.title}}';
+  String toString() => 'UpdateNoteBody { body: $body }';
 }
 
 @immutable
-class OpenNewNote {
+class AddTodo {
+  final String todo;
+
+  const AddTodo({required this.todo});
+
   @override
-  String toString() => 'OpenNewNote';
+  String toString() => 'AddTodo { todo: $todo }';
 }
 
 @immutable
-class TogglePinnedStatus {
-  TogglePinnedStatus(this.pinned) : assert(pinned != null);
+class RemoveTodo {
+  final TodoDto todo;
 
-  final bool pinned;
+  const RemoveTodo({required this.todo});
 
   @override
-  String toString() => 'TogglePinnedStatus {pinned: $pinned}';
+  String toString() => 'RemoveTodo { todo: $todo }';
 }
 
 @immutable
-class MoveToTrash {
-  MoveToTrash(this.note) : assert(note != null);
+class ToggleTodo {
+  final NoteDto note;
+  final TodoDto todo;
 
-  final Note note;
+  const ToggleTodo({required this.todo, required this.note});
 
   @override
-  String toString() => 'MoveToTrash {note: $note}';
+  String toString() => 'ToggleTodo { note: $note, todo: $todo }';
 }
 
 @immutable
-class MoveToTrashSucceeded {
+class EditTodo {
+  final NoteDto note;
+  final TodoDto todo;
+  final String newTodoText;
+
+  const EditTodo(
+      {required this.todo, required this.note, required this.newTodoText});
+
   @override
-  String toString() => 'MoveToTrashSucceeded';
+  String toString() =>
+      'EditTodo { note: $note, todo: $todo, newTodoText: $newTodoText }';
 }
 
 @immutable
-class MoveToTrashFailed {
-  MoveToTrashFailed(this.exception) : assert(exception != null);
+class ReorderTodo {
+  final NoteDto note;
+  final int newIndex;
+  final int oldIndex;
 
-  final ActionException exception;
+  const ReorderTodo({
+    required this.note,
+    required this.newIndex,
+    required this.oldIndex,
+  });
 
   @override
-  String toString() => 'MoveToTrashFailed {exception: $exception}';
+  String toString() =>
+      'ReorderTodo { note: $note, newIndex: $newIndex, oldIndex: $oldIndex }';
 }
 
-@immutable
-class Restore {
-  Restore(this.note) : assert(note != null);
-
-  final Note note;
-
+class CleanNotePage {
   @override
-  String toString() => 'Restore {note: $note}';
-}
-
-@immutable
-class RestoreSucceeded {
-  @override
-  String toString() => 'RestoreSucceeded';
-}
-
-@immutable
-class RestoreFailed {
-  RestoreFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'RestoreFailed {exception: $exception}';
-}
-
-@immutable
-class MoveToArchive {
-  MoveToArchive(this.note) : assert(note != null);
-
-  final Note note;
-
-  @override
-  String toString() => 'MoveToArchive {note: $note}';
-}
-
-@immutable
-class MoveToArchiveSucceeded {
-  @override
-  String toString() => 'MoveToArchiveSucceeded';
-}
-
-@immutable
-class MoveToArchiveFailed {
-  MoveToArchiveFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'MoveToArchiveFailed {exception: $exception}';
-}
-
-@immutable
-class Unarchive {
-  Unarchive(this.note) : assert(note != null);
-
-  final Note note;
-
-  @override
-  String toString() => 'Unarchive {note: $note}';
-}
-
-@immutable
-class UnarchiveSucceeded {
-  @override
-  String toString() => 'UnarchiveSucceeded';
-}
-
-@immutable
-class UnarchiveFailed {
-  UnarchiveFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'UnarchiveFailed {exception: $exception}';
-}
-
-@immutable
-class DeleteNote {
-  DeleteNote(this.noteId) : assert(noteId != null);
-
-  final String noteId;
-
-  @override
-  String toString() => 'DeleteNote {noteId: $noteId}';
-}
-
-@immutable
-class DeleteNoteSucceeded {
-  @override
-  String toString() => 'DeleteNoteSucceeded';
-}
-
-@immutable
-class DeleteNoteFailed {
-  DeleteNoteFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'DeleteNoteFailed {exception: $exception}';
-}
-
-@immutable
-class FindNote {
-  FindNote(this.noteId) : assert(noteId != null);
-
-  final String noteId;
-
-  @override
-  String toString() => 'FindNote {noteId: $noteId}';
-}
-
-@immutable
-class FindNoteSucceeded {
-  FindNoteSucceeded(this.note) : assert(note != null);
-
-  final Note note;
-
-  @override
-  String toString() => 'FindNoteSucceeded {note: $note}';
-}
-
-@immutable
-class FindNoteFailed {
-  FindNoteFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'FindNoteFailed {exception: $exception}';
+  String toString() => 'CleanNotePage';
 }

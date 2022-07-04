@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobipad/styles/text_styles.dart';
+
+typedef OnTap = void Function();
 
 class SettingsItem extends StatelessWidget {
   final String title;
-  final String subTitle;
-  final Widget trail;
-  final Function onTap;
+  final String? subTitle;
+  final Widget? trail;
+  final OnTap? onTap;
 
-  const SettingsItem(
-      {Key key, this.title, this.subTitle, this.trail, this.onTap})
-      : super(key: key);
+  const SettingsItem({
+    Key? key,
+    required this.title,
+    this.onTap,
+    this.subTitle,
+    this.trail,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class SettingsItem extends StatelessWidget {
       onTap: onTap,
       child: Ink(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -27,26 +33,24 @@ class SettingsItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 40.sp,
-                        fontWeight: FontWeight.w500),
+                    style: OhNotesTextStyles.notePreviewBody.copyWith(
+                      color: Colors.black,
+                    ),
                   ),
                   Visibility(
                     visible: subTitle != null,
                     child: Text(
                       subTitle ?? '',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 38.sp,
-                          fontWeight: FontWeight.w400),
+                      style: OhNotesTextStyles.notePreviewBody.copyWith(
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ],
               ),
               Visibility(
                 visible: trail != null,
-                child: trail ?? SizedBox(),
+                child: trail ?? const SizedBox(),
               ),
             ],
           ),

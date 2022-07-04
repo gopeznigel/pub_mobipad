@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobipad/vars/colors.dart';
+import 'package:mobipad/styles/colors.dart';
+import 'package:mobipad/styles/text_styles.dart';
 
 class LoginButton extends StatelessWidget {
-  const LoginButton(
-      {Key key,
-      this.label = 'Login',
-      this.width,
-      this.height,
-      this.loading,
-      @required this.onTap})
-      : super(key: key);
+  const LoginButton({
+    Key? key,
+    required this.loading,
+    required this.onTap,
+    this.label = 'Login',
+    this.width,
+    this.height,
+  }) : super(key: key);
 
   final String label;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final Function onTap;
   final bool loading;
 
@@ -27,11 +27,9 @@ class LoginButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 3,
-          primary: !loading
-              ? OhNotesColor.active_icons
-              : OhNotesColor.inactive_icons,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.sp)),
+          primary:
+              !loading ? OhNotesColor.activeIcons : OhNotesColor.inactiveIcons,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         ),
         onPressed: () {
           onTap();
@@ -39,13 +37,11 @@ class LoginButton extends StatelessWidget {
         child: !loading
             ? Text(
                 label,
-                style: TextStyle(
-                  fontSize: 45.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).primaryColor,
+                style: OhNotesTextStyles.button.copyWith(
+                  color: OhNotesColor.primary,
                 ),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       ),
@@ -55,15 +51,15 @@ class LoginButton extends StatelessWidget {
 
 class GoogleButton extends StatelessWidget {
   const GoogleButton({
-    @required this.onTap,
+    Key? key,
+    required this.onTap,
     this.width,
     this.height,
     this.isLoading = false,
-    Key key,
   }) : super(key: key);
 
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final bool isLoading;
   final Function onTap;
 
@@ -71,13 +67,12 @@ class GoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height ?? 48.0,
-      width: width ?? 700.w,
+      width: width ?? 700,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 3,
-          primary: OhNotesColor.google_button,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.sp)),
+          primary: OhNotesColor.googleButton,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         ),
         onPressed: () {
           onTap();
@@ -88,19 +83,17 @@ class GoogleButton extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     'Login with Google',
-                    style: TextStyle(
-                      fontSize: 45.sp,
-                      fontWeight: FontWeight.w600,
+                    style: OhNotesTextStyles.button.copyWith(
                       color: Colors.white,
                     ),
                   ),
-                  FaIcon(
+                  const FaIcon(
                     FontAwesomeIcons.google,
                     color: Colors.white,
                   ),
                 ],
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       ),

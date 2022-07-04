@@ -3,7 +3,7 @@ import 'package:mobipad/exception/action_exception.dart';
 
 @immutable
 class SendResetPasswordLink {
-  SendResetPasswordLink(this.email) : assert(email != null);
+  const SendResetPasswordLink(this.email);
 
   final String email;
 
@@ -19,7 +19,7 @@ class SendResetPasswordLinkSucceeded {
 
 @immutable
 class SendResetPasswordLinkFailed {
-  SendResetPasswordLinkFailed(this.exception) : assert(exception != null);
+  const SendResetPasswordLinkFailed(this.exception);
 
   final ActionException exception;
 

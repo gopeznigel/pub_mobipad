@@ -1,11 +1,12 @@
+import 'package:mobipad/features/login/dtos.dart';
+import 'package:mobipad/features/login/state.dart';
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
-import 'state.dart';
 
 final Reducer<LoginState> loginStateReducer = combineReducers([
-  TypedReducer<LoginState, StoreUser>(_storeUserReducer),
-  TypedReducer<LoginState, ClearUser>(_clearUserReducer),
+  TypedReducer<LoginState, CheckLoginStatusSucceeded>(
+      _handleCheckLoginStatusSucceeded),
   TypedReducer<LoginState, Login>(_loginReducer),
   TypedReducer<LoginState, LoginSucceeded>(_loginSucceededReducer),
   TypedReducer<LoginState, LoginFailed>(_loginFailedReducer),
@@ -17,71 +18,62 @@ final Reducer<LoginState> loginStateReducer = combineReducers([
       _loginUsingGoogleSucceededReducer),
   TypedReducer<LoginState, LoginUsingGoogleFailed>(
       _loginUsingGoogleFailedReducer),
-  TypedReducer<LoginState, Logout>(_logoutReducer),
-  TypedReducer<LoginState, AccountInitDone>(_accountInitDoneReducer),
 ]);
 
-LoginState _accountInitDoneReducer(LoginState state, AccountInitDone action) =>
-    state
-      ..newLogin = false
-      ..exception = null;
+LoginState _handleCheckLoginStatusSucceeded(
+        LoginState state, CheckLoginStatusSucceeded action) =>
+    state.rebuild((b) {
+      if (action.user != null) {
+        return b..user.replace(action.user!);
+      } else {
+        return b..user = null;
+      }
+    });
 
-LoginState _storeUserReducer(LoginState state, StoreUser action) => state
-  ..user = action.user
-  ..isLoading = false
-  ..exception = null;
-
-LoginState _clearUserReducer(LoginState state, ClearUser action) =>
-    state..user = null;
-
-LoginState _loginReducer(LoginState state, Login action) => state
-  ..newLogin = true
-  ..isLoading = true
-  ..exception = null;
+LoginState _loginReducer(LoginState state, Login action) =>
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.loading
+      ..exception = null);
 
 LoginState _loginSucceededReducer(LoginState state, LoginSucceeded action) =>
-    state
-      ..isLoading = false
-      ..exception = null;
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..user.replace(action.user));
 
-LoginState _loginFailedReducer(LoginState state, LoginFailed action) => state
-  ..isLoading = false
-  ..exception = action.exception;
+LoginState _loginFailedReducer(LoginState state, LoginFailed action) =>
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..exception = action.exception);
 
-LoginState _signUpReducer(LoginState state, SignUp action) => state
-  ..newLogin = true
-  ..isLoading = true
-  ..exception = null;
+LoginState _signUpReducer(LoginState state, SignUp action) =>
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.loading
+      ..exception = null);
 
 LoginState _signUpSucceededReducer(LoginState state, SignUpSucceeded action) =>
-    state
-      ..isLoading = false
-      ..exception = null;
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..user.replace(action.user));
 
-LoginState _signUpFailedReducer(LoginState state, SignUpFailed action) => state
-  ..isLoading = false
-  ..exception = action.exception;
+LoginState _signUpFailedReducer(LoginState state, SignUpFailed action) =>
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..exception = action.exception);
 
 LoginState _loginUsingGoogleReducer(
         LoginState state, LoginUsingGoogle action) =>
-    state
-      ..newLogin = true
-      ..googleSignIn = true
-      ..isLoading = true
-      ..exception = null;
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.loading
+      ..exception = null);
 
 LoginState _loginUsingGoogleSucceededReducer(
         LoginState state, LoginUsingGoogleSucceeded action) =>
-    state
-      ..isLoading = false
-      ..exception = null;
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..user.replace(action.user));
 
 LoginState _loginUsingGoogleFailedReducer(
         LoginState state, LoginUsingGoogleFailed action) =>
-    state
-      ..isLoading = false
-      ..exception = action.exception;
-
-LoginState _logoutReducer(LoginState state, Logout action) => state
-  ..googleSignIn = false
-  ..exception = null;
+    state.rebuild((b) => b
+      ..status = LoginStatusEnum.done
+      ..exception = action.exception);

@@ -1,11 +1,11 @@
-import 'package:mobipad/services/auth_api.dart';
+import 'package:mobipad/services/auth_service.dart';
 
 class ForgotPasswordApi {
-  ForgotPasswordApi(this._api) : assert(_api != null);
+  final AuthService _auth;
 
-  final Auth _api;
+  ForgotPasswordApi(this._auth);
 
   Future<void> sendResetPasswordLink(String email) async {
-    await _api.resetPassword(email);
+    await _auth.resetPassword(email);
   }
 }

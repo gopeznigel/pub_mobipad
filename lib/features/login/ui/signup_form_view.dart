@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobipad/utils/validator.dart';
+import 'package:mobipad/styles/text_styles.dart';
 
-import '../../../utils/validator.dart';
-import 'widgets/login_text_fields.dart';
+import 'widgets/email_text_field.dart';
+import 'widgets/password_text_field.dart';
 
 class SignupFormView extends StatelessWidget {
-  const SignupFormView(
-      {this.formKey,
-      this.emailTextContoller,
-      this.passwordTextContoller,
-      this.confirmPasswordTextContoller});
+  const SignupFormView({
+    Key? key,
+    required this.formKey,
+    required this.emailTextContoller,
+    required this.passwordTextContoller,
+    required this.confirmPasswordTextContoller,
+  }) : super(key: key);
 
   final TextEditingController emailTextContoller;
   final TextEditingController passwordTextContoller;
@@ -22,13 +25,12 @@ class SignupFormView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 10.w),
+          padding: const EdgeInsets.only(left: 10),
           child: Text(
             'Email',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 45.sp,
-                fontWeight: FontWeight.w600),
+            style: OhNotesTextStyles.appBarTitle.copyWith(
+              color: Colors.white,
+            ),
           ),
         ),
         EmailTextField(
@@ -41,13 +43,12 @@ class SignupFormView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 10.w),
+          padding: const EdgeInsets.only(left: 10),
           child: Text(
             'Password',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 45.sp,
-                fontWeight: FontWeight.w600),
+            style: OhNotesTextStyles.appBarTitle.copyWith(
+              color: Colors.white,
+            ),
           ),
         ),
         PasswordTextField(
@@ -60,13 +61,12 @@ class SignupFormView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 10.w),
+          padding: const EdgeInsets.only(left: 10),
           child: Text(
             'Confirm Password',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 45.sp,
-                fontWeight: FontWeight.w600),
+            style: OhNotesTextStyles.appBarTitle.copyWith(
+              color: Colors.white,
+            ),
           ),
         ),
         PasswordTextField(
@@ -88,9 +88,9 @@ class SignupFormView extends StatelessWidget {
       child: Column(
         children: <Widget>[
           emailTextField,
-          SizedBox(height: 20.h),
+          const SizedBox(height: 10),
           passwordTextField,
-          SizedBox(height: 20.h),
+          const SizedBox(height: 10),
           confirmPasswordTextField,
         ],
       ),

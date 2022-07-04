@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobipad/features/forgot_password/actions.dart';
-import 'package:mobipad/features/forgot_password/view_model/forgot_password_view_model.dart';
-import 'package:mobipad/features/login/ui/widgets/login_text_fields.dart';
+import 'package:mobipad/features/forgot_password/view_models/forgot_password_view_model.dart';
+import 'package:mobipad/features/login/ui/widgets/email_text_field.dart';
+import 'package:mobipad/styles/colors.dart';
+import 'package:mobipad/styles/text_styles.dart';
 import 'package:mobipad/utils/validator.dart';
 import 'package:redux/redux.dart';
 
 import '../../../state.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  static const String route = '/resetPasswordPage';
+  static const String route = '/forgotPasswordPage';
+
+  const ForgotPasswordPage({Key? key}) : super(key: key);
+
   @override
-  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
@@ -41,12 +45,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forgot Password'),
+        backgroundColor: OhNotesColor.primary,
+        title: Text(
+          'Forgot Password',
+          style: OhNotesTextStyles.appBarTitle.copyWith(
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 200.h),
-          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
           child: Column(
             children: [
               Form(
@@ -56,13 +65,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 10.w),
+                      padding: const EdgeInsets.only(left: 10),
                       child: Text(
                         'Email',
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 45.sp,
-                            fontWeight: FontWeight.w600),
+                        style: OhNotesTextStyles.appBarTitle,
                       ),
                     ),
                     EmailTextField(
@@ -72,55 +78,59 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 50.h,
+              const SizedBox(
+                height: 20,
               ),
-              SizedBox(
-                height: 120.h,
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: !sending
-                        ? Theme.of(context).colorScheme.secondary
-                        : Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.sp),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor:
+                          !sending ? OhNotesColor.primary : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
+                    onPressed: () {
+                      var validated = Validator.formValidated(_formKey);
+                      if (validated) {
+                        store.dispatch(
+                            SendResetPasswordLink(_emailController.text));
+                        setState(() {
+                          sent = true;
+                        });
+                      }
+                    },
+                    child: !sending
+                        ? Text(
+                            'Send Password Reset Link',
+                            style: OhNotesTextStyles.button.copyWith(
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
-                  onPressed: () {
-                    var validated = Validator.formValidated(_formKey);
-                    if (validated) {
-                      store.dispatch(
-                          SendResetPasswordLink(_emailController.text));
-                      setState(() {
-                        sent = true;
-                      });
-                    }
-                  },
-                  child: !sending
-                      ? Text(
-                          'Send Reset Password Link',
-                          style: TextStyle(
-                              fontSize: 45.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        ),
                 ),
               ),
-              SizedBox(
-                height: 50.h,
+              const SizedBox(
+                height: 10,
               ),
               Visibility(
                 visible: !sending && sent,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: Center(
                     child: Text(
                       'Password reset link was sent on the email provided.',
                       textAlign: TextAlign.center,
+                      style: OhNotesTextStyles.notePreviewBody.copyWith(
+                        color: OhNotesColor.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

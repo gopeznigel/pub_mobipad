@@ -36,27 +36,27 @@ class DateTimeUtil {
       time = format.format(date);
     } else if (diff.inDays > 0 && diff.inDays < 7) {
       if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' day ago';
+        time = '${diff.inDays} day ago';
       } else {
-        time = diff.inDays.toString() + ' days ago';
+        time = '${diff.inDays} days ago';
       }
     } else if (diff.inDays > 6 && diff.inDays < 30) {
       if (diff.inDays == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' week ago';
+        time = '${(diff.inDays / 7).floor()} week ago';
       } else {
-        time = (diff.inDays / 7).floor().toString() + ' weeks ago';
+        time = '${(diff.inDays / 7).floor()} weeks ago';
       }
     } else if (diff.inDays > 29 && diff.inDays < 265) {
       if (diff.inDays == 30) {
-        time = (diff.inDays / 30).floor().toString() + ' month ago';
+        time = '${(diff.inDays / 30).floor()} month ago';
       } else {
-        time = (diff.inDays / 30).floor().toString() + ' months ago';
+        time = '${(diff.inDays / 30).floor()} months ago';
       }
     } else {
       if (diff.inDays == 265) {
-        time = (diff.inDays / 265).floor().toString() + ' year ago';
+        time = '${(diff.inDays / 265).floor()} year ago';
       } else {
-        time = (diff.inDays / 265).floor().toString() + ' years ago';
+        time = '${(diff.inDays / 265).floor()} years ago';
       }
     }
 

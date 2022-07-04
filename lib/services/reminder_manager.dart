@@ -4,25 +4,25 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ReminderManager {
-  ReminderManager(this._flutterLocalNotificationsPlugin)
-      : assert(_flutterLocalNotificationsPlugin != null);
+  ReminderManager(this._flutterLocalNotificationsPlugin);
 
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   NotificationDetails _getplatformChannelSpecifics(int id) {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        '$id', 'Reminder', 'Notification option for reminder',
+        '$id', 'Reminder',
+        channelDescription: 'Notification option for reminder',
         priority: Priority.high,
         icon: 'secondary_icon',
         importance: Importance.max,
-        styleInformation: DefaultStyleInformation(true, true),
+        styleInformation: const DefaultStyleInformation(true, true),
         enableLights: true,
         color: const Color.fromARGB(255, 220, 220, 220),
         ledColor: const Color.fromARGB(255, 0, 255, 0),
         ledOnMs: 1000,
         ledOffMs: 500);
 
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = const IOSNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
@@ -31,11 +31,13 @@ class ReminderManager {
     return platformChannelSpecifics;
   }
 
-  Future<int> scheduleReminder(
-      {String title,
-      String message,
-      List<int> schedules,
-      String payload}) async {
+  Future<int> scheduleReminder({
+    String? title,
+    String? message,
+    List<int>? schedules,
+    String? payload,
+    int? repeat,
+  }) async {
     var index = 1;
     var id = await getNextUsedId();
 
@@ -52,20 +54,23 @@ class ReminderManager {
         payload: payload,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: getDateTimeComponent(repeat ?? 0),
       );
     }
 
-    schedules.forEach(schedIter);
+    schedules?.forEach(schedIter);
 
     return id;
   }
 
-  Future<void> rescheduleReminder(
-      {String title,
-      String message,
-      List<int> schedules,
-      String payload,
-      int remId}) async {
+  Future<void> rescheduleReminder({
+    required int remId,
+    String? title,
+    String? message,
+    List<int>? schedules,
+    String? payload,
+    int? repeat,
+  }) async {
     var index = 1;
 
     void schedIter(schedule) async {
@@ -81,10 +86,11 @@ class ReminderManager {
         payload: payload,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: getDateTimeComponent(repeat ?? 0),
       );
     }
 
-    schedules.forEach(schedIter);
+    schedules?.forEach(schedIter);
   }
 
   Future<void> cancelReminder(int id) async {
@@ -121,5 +127,21 @@ class ReminderManager {
     var lastIdStringWithoutIndex =
         lastIdIntegerWithIndex.toString().substring(1);
     return int.parse(lastIdStringWithoutIndex) + 1;
+  }
+
+  DateTimeComponents? getDateTimeComponent(int repeat) {
+    switch (repeat) {
+      case 1: // Daily
+        return DateTimeComponents.time;
+      case 2: // Weekly
+        return DateTimeComponents.dayOfWeekAndTime;
+      case 3: // Monthly
+        return DateTimeComponents.dayOfMonthAndTime;
+      case 4: // Yearly
+        return DateTimeComponents.dateAndTime;
+      case 0: // Once
+      default:
+        return null;
+    }
   }
 }

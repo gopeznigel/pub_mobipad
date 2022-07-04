@@ -1,12 +1,20 @@
+import 'package:built_value/built_value.dart';
 import 'package:mobipad/exception/action_exception.dart';
 
-class ForgotPasswordState {
-  bool isSending;
-  ActionException exception;
+part 'state.g.dart';
 
-  ForgotPasswordState({this.isSending, this.exception});
+abstract class ForgotPasswordState
+    implements Built<ForgotPasswordState, ForgotPasswordStateBuilder> {
+  factory ForgotPasswordState(
+          [void Function(ForgotPasswordStateBuilder b) updates]) =
+      _$ForgotPasswordState;
 
-  ForgotPasswordState.initial()
-      : isSending = false,
-        exception = null;
+  factory ForgotPasswordState.initial() => _$ForgotPasswordState._(
+        isBusy: false,
+      );
+
+  ForgotPasswordState._();
+
+  bool get isBusy;
+  ActionException? get exception;
 }

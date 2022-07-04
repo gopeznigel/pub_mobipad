@@ -1,3 +1,3 @@
-bool production = false;
+// bool production = false;
 
-bool loggingMiddleware = false;
+bool loggingMiddleware = true;

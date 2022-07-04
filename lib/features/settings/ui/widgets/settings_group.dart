@@ -1,44 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobipad/features/settings/ui/widgets/settings_item.dart';
+import 'package:mobipad/styles/text_styles.dart';
 
 class SettingsGroup extends StatelessWidget {
   final String title;
   final List<SettingsItem> items;
 
-  const SettingsGroup({Key key, this.title, this.items}) : super(key: key);
+  const SettingsGroup({
+    Key? key,
+    required this.title,
+    required this.items,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(20.w),
+            padding: const EdgeInsets.all(10),
             child: Text(
               title,
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 45.sp,
-                  fontWeight: FontWeight.w600),
+              style: OhNotesTextStyles.reminderTitle.copyWith(
+                color: Colors.blue,
+              ),
             ),
           ),
           Column(
             children: List.generate(items.length, (i) {
               return Column(
                 children: [
-                  SizedBox(
-                    height: 20.h,
+                  const SizedBox(
+                    height: 5,
                   ),
                   items[i],
                 ],
               );
             }),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 1),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 1),
             child: Divider(
               color: Colors.black,
             ),

@@ -6,8 +6,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 class PrivacyPage extends StatefulWidget {
   static const String route = 'privacyPage';
 
+  const PrivacyPage({Key? key}) : super(key: key);
+
   @override
-  _PrivacyPageState createState() => _PrivacyPageState();
+  State<PrivacyPage> createState() => _PrivacyPageState();
 }
 
 class _PrivacyPageState extends State<PrivacyPage> {
@@ -16,7 +18,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String url = ModalRoute.of(context).settings.arguments;
+    final String url = ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,9 +27,9 @@ class _PrivacyPageState extends State<PrivacyPage> {
       body: WebView(
         initialUrl: url,
         javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
       ),
     );
   }

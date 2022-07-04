@@ -1,9 +1,9 @@
+import 'package:mobipad/exception/action_exception.dart';
+import 'package:mobipad/features/forgot_password/api.dart';
+import 'package:mobipad/state.dart';
 import 'package:redux/redux.dart';
 
-import '../../exception/action_exception.dart';
-import '../../state.dart';
 import 'actions.dart';
-import 'api.dart';
 
 List<Middleware<AppState>> getMiddleware(ForgotPasswordApi forgotPasswordApi) =>
     [

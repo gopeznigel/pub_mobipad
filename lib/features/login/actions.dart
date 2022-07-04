@@ -1,19 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:mobipad/features/login/model.dart';
-
-import '../../exception/action_exception.dart';
-
-@immutable
-class OpenSignUpPage {
-  @override
-  String toString() => 'OpenSignUpPage';
-}
-
-@immutable
-class OpenLoginPage {
-  @override
-  String toString() => 'OpenLoginPage';
-}
+import 'package:mobipad/exception/action_exception.dart';
+import 'package:mobipad/features/login/dtos.dart';
 
 @immutable
 class CheckLoginStatus {
@@ -23,20 +10,17 @@ class CheckLoginStatus {
 
 @immutable
 class CheckLoginStatusSucceeded {
-  CheckLoginStatusSucceeded(this.userId, this.hasUserId)
-      : assert(userId != null && hasUserId != null);
+  const CheckLoginStatusSucceeded({this.user});
 
-  final bool hasUserId;
-  final String userId;
+  final UserDto? user;
 
   @override
-  String toString() =>
-      'CheckLoginStatusSucceeded {hasToken: $hasUserId, userId: $userId}';
+  String toString() => 'CheckLoginStatusSucceeded {user: $user}';
 }
 
 @immutable
 class CheckLoginStatusFailed {
-  CheckLoginStatusFailed(this.exception) : assert(exception != null);
+  const CheckLoginStatusFailed({required this.exception});
 
   final ActionException exception;
 
@@ -45,8 +29,40 @@ class CheckLoginStatusFailed {
 }
 
 @immutable
+class SignUp {
+  const SignUp({required this.email, required this.password});
+
+  final String email;
+  final String password;
+
+  @override
+  String toString() =>
+      'SignUp {email: $email, password: passwordHiddenOfCourse}';
+}
+
+@immutable
+class SignUpSucceeded {
+  const SignUpSucceeded({required this.user});
+
+  final UserDto user;
+
+  @override
+  String toString() => 'SignUpSucceeded {user: $user}';
+}
+
+@immutable
+class SignUpFailed {
+  const SignUpFailed({required this.exception});
+
+  final ActionException exception;
+
+  @override
+  String toString() => 'SignUpFailed {exception: $exception}';
+}
+
+@immutable
 class Login {
-  Login(this.email, this.password) : assert(email != null && password != null);
+  const Login({required this.email, required this.password});
 
   final String email;
   final String password;
@@ -57,19 +73,17 @@ class Login {
 
 @immutable
 class LoginSucceeded {
-  LoginSucceeded(this.userId, this.hasUserId)
-      : assert(userId != null && hasUserId != null);
+  const LoginSucceeded({required this.user});
 
-  final bool hasUserId;
-  final String userId;
+  final UserDto user;
 
   @override
-  String toString() => 'LoginSucceeded {userId: $userId, hasToken: $hasUserId}';
+  String toString() => 'LoginSucceeded {user: $user}';
 }
 
 @immutable
 class LoginFailed {
-  LoginFailed(this.exception) : assert(exception != null);
+  const LoginFailed({required this.exception});
 
   final ActionException exception;
 
@@ -85,20 +99,17 @@ class LoginUsingGoogle {
 
 @immutable
 class LoginUsingGoogleSucceeded {
-  LoginUsingGoogleSucceeded(this.userId, this.hasUserId)
-      : assert(userId != null && hasUserId != null);
+  const LoginUsingGoogleSucceeded({required this.user});
 
-  final bool hasUserId;
-  final String userId;
+  final UserDto user;
 
   @override
-  String toString() =>
-      'LoginUsingGoogleSucceeded {userId: $userId, hasToken: $hasUserId}';
+  String toString() => 'LoginUsingGoogleSucceeded {user: $user}';
 }
 
 @immutable
 class LoginUsingGoogleFailed {
-  LoginUsingGoogleFailed(this.exception) : assert(exception != null);
+  const LoginUsingGoogleFailed({required this.exception});
 
   final ActionException exception;
 
@@ -120,65 +131,10 @@ class LogoutSucceeded {
 
 @immutable
 class LogoutFailed {
-  LogoutFailed(this.exception) : assert(exception != null);
+  const LogoutFailed({required this.exception});
 
   final ActionException exception;
 
   @override
   String toString() => 'LogoutFailed {exception: $exception}';
-}
-
-@immutable
-class SignUp {
-  SignUp(this.email, this.password) : assert(email != null && password != null);
-
-  final String email;
-  final String password;
-
-  @override
-  String toString() => 'SignUp';
-}
-
-@immutable
-class SignUpSucceeded {
-  SignUpSucceeded(this.userId, this.hasUserId)
-      : assert(userId != null && hasUserId != null);
-
-  final bool hasUserId;
-  final String userId;
-
-  @override
-  String toString() => 'SignUpSucceeded {hasToken: $hasUserId}';
-}
-
-@immutable
-class SignUpFailed {
-  SignUpFailed(this.exception) : assert(exception != null);
-
-  final ActionException exception;
-
-  @override
-  String toString() => 'SignUpFailed {exception: $exception}';
-}
-
-@immutable
-class StoreUser {
-  StoreUser(this.user) : assert(user != null);
-
-  final OhNotesUser user;
-
-  @override
-  String toString() => 'StoreUser {user: $user}';
-}
-
-@immutable
-class ClearUser {
-  @override
-  String toString() => 'ClearUser';
-}
-
-@immutable
-class AccountInitDone {
-  @override
-  String toString() => 'AccountInitDone';
 }
