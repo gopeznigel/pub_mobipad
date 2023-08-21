@@ -78,6 +78,7 @@ Future<Widget> get appWidget async {
 
   final materialApp = MaterialApp(
     key: appKey,
+    debugShowCheckedModeBanner: true,
     navigatorObservers: [compositeNavigatorObserver],
     navigatorKey: navigatorKey,
     initialRoute: App.route,
